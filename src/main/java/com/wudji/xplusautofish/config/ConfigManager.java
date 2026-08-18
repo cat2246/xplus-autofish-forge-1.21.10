@@ -2,80 +2,105 @@ package com.wudji.xplusautofish.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wudji.xplusautofish.NeoForgedModXPlusAutofish;
-import net.neoforged.fml.loading.FMLPaths;
-import org.apache.commons.io.FileUtils;
+import com.google.gson.JsonParseException;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.concurrent.Executor;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ConfigManager {
+    private static final String CONFIG_FILE_NAME = "autofish.config";
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    private final Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
+    private final Path configDirectory;
+    private final Path configFile;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "autofish-config-writer");
+        thread.setDaemon(true);
+        return thread;
+    });
     private Config config;
 
-    private NeoForgedModXPlusAutofish modAutofish;
-    private Gson gson;
-    private File configFile;
-
-    private Executor executor = Executors.newSingleThreadExecutor();
-
-    public ConfigManager(NeoForgedModXPlusAutofish modAutofish) {
-        this.modAutofish = modAutofish;
-        this.gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        this.configFile = new File(FMLPaths.CONFIGDIR.get().toFile(), "autofish.config");
-        //run synchronously on first run so our options are available for the Autofish instance
-        readConfig(false);
-    }
-
-    public void readConfig(boolean async) {
-
-        Runnable task = () -> {
-            try {
-                //read if exists
-                if (configFile.exists()) {
-                    String fileContents = FileUtils.readFileToString(configFile, Charset.defaultCharset());
-                    config = gson.fromJson(fileContents, Config.class);
-
-                    //If there were any invalid options, write the fixed config
-                    if (config.enforceConstraints()) writeConfig(true);
-
-                } else { //write new if no config file exists
-                    writeNewConfig();
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                writeNewConfig();
-            }
-        };
-
-        if (async) executor.execute(task);
-        else task.run();
-    }
-
-    public void writeNewConfig() {
-        config = new Config();
-        writeConfig(false);
-    }
-
-    public void writeConfig(boolean async) {
-        Runnable task = () -> {
-            try {
-                if (config != null) {
-                    String serialized = gson.toJson(config);
-                    FileUtils.writeStringToFile(configFile, serialized, Charset.defaultCharset());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
-
-        if (async) executor.execute(task);
-        else task.run();
+    public ConfigManager(Path configDirectory) {
+        this.configDirectory = configDirectory;
+        this.configFile = configDirectory.resolve(CONFIG_FILE_NAME);
+        readConfig();
     }
 
     public Config getConfig() {
         return config;
+    }
+
+    public void readConfig() {
+        try {
+            Files.createDirectories(configDirectory);
+            if (Files.exists(configFile)) {
+                Config loaded = gson.fromJson(Files.readString(configFile, StandardCharsets.UTF_8), Config.class);
+                if (loaded == null) {
+                    throw new JsonParseException("Config JSON contains null");
+                }
+                boolean changed = loaded.enforceConstraints();
+                if (config == null) {
+                    config = new Config();
+                }
+                config.copyFrom(loaded);
+                if (changed) {
+                    writeConfig();
+                }
+            } else {
+                config = new Config();
+                writeConfig();
+            }
+        } catch (Exception exception) {
+            LOGGER.error("Unable to read config from {}. Restoring defaults.", configFile, exception);
+            if (config == null) {
+                config = new Config();
+            } else {
+                config.copyFrom(new Config());
+            }
+            writeConfig();
+        }
+    }
+
+    public void writeConfig() {
+        Config snapshot = config == null ? new Config() : config.copy();
+        snapshot.enforceConstraints();
+        try {
+            Files.createDirectories(configDirectory);
+            Path temporaryFile = Files.createTempFile(configDirectory, CONFIG_FILE_NAME + ".", ".tmp");
+            try {
+                Files.writeString(temporaryFile, gson.toJson(snapshot), StandardCharsets.UTF_8);
+                moveIntoPlace(temporaryFile);
+            } finally {
+                Files.deleteIfExists(temporaryFile);
+            }
+        } catch (Exception exception) {
+            LOGGER.error("Unable to write config to {}.", configFile, exception);
+        }
+    }
+
+    public CompletableFuture<Void> writeConfigAsync() {
+        return CompletableFuture.runAsync(this::writeConfig, executor);
+    }
+
+    private void moveIntoPlace(Path temporaryFile) throws IOException {
+        try {
+            Files.move(temporaryFile, configFile,
+                    StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException exception) {
+            Files.move(temporaryFile, configFile, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 }

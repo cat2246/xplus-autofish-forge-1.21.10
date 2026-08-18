@@ -20,7 +20,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 sourceSets.main.java {
     exclude '**/NeoForgedModXPlusAutofish.java'
     exclude '**/XPlusAutofish.java'
-    exclude '**/config/ConfigManager.java'
     exclude '**/gui/**'
     exclude '**/mixin/**'
     exclude '**/mointor/**'
