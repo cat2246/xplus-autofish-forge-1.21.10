@@ -24,16 +24,28 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonPacketLi
 
     @Inject(method = "handleSoundEvent", at = @At("HEAD"))
     public void onPlaySound(ClientboundSoundPacket playSoundS2CPacket_1, CallbackInfo ci) {
-        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handlePacket(playSoundS2CPacket_1);
+        ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
+        if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {
+            return;
+        }
+        mod.handlePacket(playSoundS2CPacket_1);
     }
 
     @Inject(method = "handleSetEntityMotion", at = @At("HEAD"))
     public void onVelocityUpdate(ClientboundSetEntityMotionPacket entityVelocityUpdateS2CPacket_1, CallbackInfo ci) {
-        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handlePacket(entityVelocityUpdateS2CPacket_1);
+        ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
+        if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {
+            return;
+        }
+        mod.handlePacket(entityVelocityUpdateS2CPacket_1);
     }
 
     @Inject(method = "handleSystemChat", at = @At("HEAD"))
     public void onSysChatMessage(ClientboundSystemChatPacket p_233708_, CallbackInfo ci) {
-        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handleChat(p_233708_);
+        ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
+        if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {
+            return;
+        }
+        mod.handleChat(p_233708_);
     }
 }

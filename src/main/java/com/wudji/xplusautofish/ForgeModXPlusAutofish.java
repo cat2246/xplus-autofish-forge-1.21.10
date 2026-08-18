@@ -36,7 +36,7 @@ public class ForgeModXPlusAutofish {
     public ForgeModXPlusAutofish(FMLJavaModLoadingContext context) {
         var modBusGroup = context.getModBusGroup();
         FMLClientSetupEvent.getBus(modBusGroup).addListener(this::clientSetup);
-        RegisterKeyMappingsEvent.getBus(modBusGroup).addListener(this::registerBindings);
+        RegisterKeyMappingsEvent.BUS.addListener(this::registerBindings);
         TickEvent.ClientTickEvent.Post.BUS.addListener(this::tick);
     }
 

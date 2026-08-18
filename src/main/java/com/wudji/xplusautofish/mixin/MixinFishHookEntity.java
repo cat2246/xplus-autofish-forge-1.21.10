@@ -15,6 +15,10 @@ public class MixinFishHookEntity {
 
     @Inject(method = "catchingFish",at = @At("TAIL"))// method_6949
     private void catchingFish(BlockPos p_37146_, CallbackInfo ci){
-        ForgeModXPlusAutofish.getInstance().tickFishingLogic(((FishingHook) (Object) this).getOwner(), nibble);
+        ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
+        if (mod == null || mod.getAutofish() == null) {
+            return;
+        }
+        mod.tickFishingLogic(((FishingHook) (Object) this).getOwner(), nibble);
     }
 }
