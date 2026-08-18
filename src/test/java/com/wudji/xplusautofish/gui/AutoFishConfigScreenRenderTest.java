@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AutoFishConfigScreenRenderTest {
     @Test
@@ -18,6 +19,7 @@ class AutoFishConfigScreenRenderTest {
         String classResource = "/" + AutoFishConfigScreen.class.getName().replace('.', '/') + ".class";
         String screenClass = "net/minecraft/client/gui/screens/Screen";
         String configScreenClass = AutoFishConfigScreen.class.getName().replace('.', '/');
+        boolean[] foundRender = {false};
         boolean[] invokesScreenRenderBackground = {false};
 
         try (InputStream bytecode = AutoFishConfigScreen.class.getResourceAsStream(classResource)) {
@@ -31,6 +33,7 @@ class AutoFishConfigScreenRenderTest {
                             || !descriptor.equals("(Lnet/minecraft/client/gui/GuiGraphics;IIF)V")) {
                         return delegate;
                     }
+                    foundRender[0] = true;
                     return new MethodVisitor(Opcodes.ASM9, delegate) {
                         @Override
                         public void visitMethodInsn(int opcode, String owner, String methodName,
@@ -48,6 +51,7 @@ class AutoFishConfigScreenRenderTest {
             }, 0);
         }
 
+        assertTrue(foundRender[0], "compiled AutoFishConfigScreen.render method must be visited");
         assertFalse(invokesScreenRenderBackground[0],
                 "AutoFishConfigScreen.render must not invoke Screen.renderBackground; Screen.renderWithTooltipAndSubtitles already does");
     }

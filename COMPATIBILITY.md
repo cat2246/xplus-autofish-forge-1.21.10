@@ -44,7 +44,9 @@ The corrected official-name artifact was then tested in the same isolated config
 
 This latter failure is retained as a limitation of the direct classpath reconstruction; it is not evidence that AutoFish fishing behavior works with OptiFine. No OptiFine interaction, configuration-screen, casting, or fishing check was exercised. The live profile baseline without AutoFish did reach OptiFine initialization, but that baseline does not establish mod compatibility.
 
-## Fix Round 2: actual launcher/profile route
+## Historical 1.3.7 actual launcher/profile evidence
+
+The following actual-launcher/title-screen evidence is retained from the 1.3.7 artifact and does not verify 1.3.8. No 1.3.8 actual-launcher, V/config-screen, or in-world interaction smoke has been run; 1.3.8 is currently covered by the automated build, regression, and JAR metadata checks in the section below.
 
 The copied TLauncher executable was inspected and run with `USERPROFILE`, `APPDATA`, `LOCALAPPDATA`, and `HOME` redirected to ignored `work/production-launch/actual-launcher-root`; the live `.minecraft` and launcher settings were not written. The copied launcher selected the copied local `ForgeOptiFine 1.21.10` profile and was started with offline username `Dev`. Its child command line used the copied Forge 60.1.9 libraries, the copied profile jar, isolated game directory, and the packaged AutoFish jar in the isolated `mods` directory. No live access token was used or recorded.
 
@@ -53,7 +55,7 @@ Immutable evidence:
 - `work/production-launch/evidence/fix-round2-actual-launcher-optifine-latest.log` (SHA-256 `B23B7F2D0F3ECC18DBBC424E4C9D0B79A96B6ACD9C96656D2B6FA9FE4891B842`)
 - `work/production-launch/evidence/fix-round2-actual-launcher-tlauncher.log` (SHA-256 `26EE69ADF9F8C2C87EAA5ABFDDA6F7B014A326ED28D536C40E510EF85EB1E331`)
 
-The retained game log proves the actual route found both `OptiFine-1.21.10_HD_U_J7_pre11.jar` and `xplus-autofish-1.3.7-forge-mc1.21.10.jar`, initialized Forge 60.1.9 for Minecraft 1.21.10, initialized MixinExtras, loaded OptiFine, completed resource loading, and reached the title screen. Visual title-screen evidence showed `Forge 60.1.9 (4 mods loaded)`. There are no `gzo`/`dae` target failures, `NoClassDefFoundError`, Patcher base-resource failure, or lifecycle crash in this actual-launcher run. This establishes packaged-JAR startup compatibility with the copied Forge+OptiFine profile through title screen. No V/config-screen, world, casting, fishing, or interaction behavior was exercised; those remain unverified.
+The retained game log proves the historical 1.3.7 route found both `OptiFine-1.21.10_HD_U_J7_pre11.jar` and `xplus-autofish-1.3.7-forge-mc1.21.10.jar`, initialized Forge 60.1.9 for Minecraft 1.21.10, initialized MixinExtras, loaded OptiFine, completed resource loading, and reached the title screen. Visual title-screen evidence showed `Forge 60.1.9 (4 mods loaded)`. There are no `gzo`/`dae` target failures, `NoClassDefFoundError`, Patcher base-resource failure, or lifecycle crash in this historical actual-launcher run. This establishes packaged-JAR startup compatibility for 1.3.7 with the copied Forge+OptiFine profile through title screen; it is not a 1.3.8 verification. No V/config-screen, world, casting, fishing, or interaction behavior was exercised; those remain unverified.
 
 ## Build and deliverables
 
