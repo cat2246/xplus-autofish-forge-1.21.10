@@ -6,6 +6,7 @@ import com.wudji.xplusautofish.mointor.FishMonitorMPMotion;
 import com.wudji.xplusautofish.mointor.FishMonitorMPSound;
 import com.wudji.xplusautofish.scheduler.ActionType;
 import com.wudji.xplusautofish.scheduler.RandomDelay;
+import com.wudji.xplusautofish.config.ClearLagPattern;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -30,6 +31,7 @@ import java.util.Objects;
 import java.util.function.DoubleSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class XPlusAutofish {
     private Minecraft client;
@@ -136,7 +138,15 @@ public class XPlusAutofish {
                         if (org.apache.commons.lang3.StringUtils.deleteWhitespace(modAutofish.getConfig().getClearLagRegex()).isEmpty())
                             return;
                         //check if it matches
-                        Matcher matcher = Pattern.compile(modAutofish.getConfig().getClearLagRegex(), Pattern.CASE_INSENSITIVE).matcher(StringUtil.stripColor(packet.content().getString()));
+                        Pattern pattern;
+                        try {
+                            pattern = ClearLagPattern.compile(modAutofish.getConfig().getClearLagRegex());
+                        } catch (PatternSyntaxException ignored) {
+                            // A hand-edited legacy config must not crash packet handling.
+                            return;
+                        }
+                        if (pattern == null) return;
+                        Matcher matcher = pattern.matcher(StringUtil.stripColor(packet.content().getString()));
                         if (matcher.find()) {
                             queueRecast();
                         }

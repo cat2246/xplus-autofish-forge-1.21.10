@@ -124,6 +124,10 @@ public class Config {
         this.clearLagRegex = clearLagRegex;
     }
 
+    public static boolean isValidClearLagRegex(String regex) {
+        return ClearLagPattern.isValid(regex);
+    }
+
     public void setOpenWaterDetectEnabled(boolean openWaterDetectEnabled) {
         isOpenWaterDetectEnabled = openWaterDetectEnabled;
     }
@@ -181,6 +185,9 @@ public class Config {
             changed = true;
         }
         if (clearLagRegex == null) {
+            clearLagRegex = "";
+            changed = true;
+        } else if (!isValidClearLagRegex(clearLagRegex)) {
             clearLagRegex = "";
             changed = true;
         }

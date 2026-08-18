@@ -90,7 +90,7 @@ public final class AutoFishConfigScreen extends Screen {
         addSlider("reel_in_delay", "options.autofish.reel_in_delay.title", 2,
                 1, 2000, draft.values()::getReelInDelay, draft.values()::setReelInDelay, false);
         addEditBox("clear_regex", "options.autofish.clear_regex.title", 3,
-                draft.values().getClearLagRegex(), draft.values()::setClearLagRegex, false);
+                draft.values().getClearLagRegex(), draft::trySetClearLagRegex, false);
 
         int buttonWidth = ACTION_BUTTON_WIDTH;
         int buttonY = height - 28;

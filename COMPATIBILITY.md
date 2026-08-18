@@ -55,6 +55,6 @@ The retained game log proves the actual route found both `OptiFine-1.21.10_HD_U_
 
 ## Build and deliverables
 
-Final Java 21 command: `./gradlew clean test build verifyJarMetadata` — `BUILD SUCCESSFUL`. Tests cover configuration, persistence, screen-model behavior, key latching, scheduling, delays, translations, event wiring, and package metadata. The verified JAR contains Forge metadata, the Mixin configuration/refmap/classes, GPL `LICENSE`, and the icon, with no NeoForge or Cloth Config metadata.
+Final Java 21 command: `./gradlew clean test build verifyJarMetadata` — `BUILD SUCCESSFUL`. Tests cover configuration, persistence, screen-model behavior, key latching, scheduling, delays, translations, and package metadata. Event-bus/key registration wiring was inspected and startup-smoked, not automatically tested. `V` interaction, native configuration controls/persistence, casting, bite reel-in, recast, and all other in-world fishing behavior remain interactive limitations. The verified JAR contains Forge metadata, the Mixin configuration/refmap/classes, GPL `LICENSE`, and the icon, with no NeoForge or Cloth Config metadata.
 
 The output JAR and source ZIP hashes are recorded in the Task 9 report. The source ZIP is generated from the committed source tree and excludes Gradle caches, build/run directories, logs, crash reports, IDE files, `work`, and generated SDD artifacts.
