@@ -1,6 +1,6 @@
 package com.wudji.xplusautofish.mixin;
 
-import com.wudji.xplusautofish.NeoForgedModXPlusAutofish;
+import com.wudji.xplusautofish.ForgeModXPlusAutofish;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.projectile.FishingHook;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +15,6 @@ public class MixinFishHookEntity {
 
     @Inject(method = "catchingFish",at = @At("TAIL"))// method_6949
     private void catchingFish(BlockPos p_37146_, CallbackInfo ci){
-        NeoForgedModXPlusAutofish.getInstance().tickFishingLogic(((FishingHook) (Object) this).getOwner(), nibble);
+        ForgeModXPlusAutofish.getInstance().tickFishingLogic(((FishingHook) (Object) this).getOwner(), nibble);
     }
 }

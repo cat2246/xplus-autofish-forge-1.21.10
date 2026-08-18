@@ -1,7 +1,7 @@
 package com.wudji.xplusautofish.scheduler;
 
 import com.mojang.authlib.minecraft.client.MinecraftClient;
-import com.wudji.xplusautofish.NeoForgedModXPlusAutofish;
+import com.wudji.xplusautofish.ForgeModXPlusAutofish;
 import com.wudji.xplusautofish.config.ConfigManager;
 import net.minecraft.client.Minecraft;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutofishScheduler {
-    private NeoForgedModXPlusAutofish modAutofish;
+    private ForgeModXPlusAutofish modAutofish;
     //Actions that run once then delete from queue
     private List<Action> queuedActions = new ArrayList<>();
     //Actions that repeat indefinitely
@@ -24,7 +24,7 @@ public class AutofishScheduler {
     private boolean isTurning = false;
     private boolean turnLeft = true;
 
-    public AutofishScheduler(NeoForgedModXPlusAutofish modAutofish) {
+    public AutofishScheduler(ForgeModXPlusAutofish modAutofish) {
         this.modAutofish = modAutofish;
     }
 

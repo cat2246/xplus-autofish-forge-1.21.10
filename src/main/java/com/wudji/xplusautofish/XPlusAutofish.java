@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 public class XPlusAutofish {
     private Minecraft client;
-    private NeoForgedModXPlusAutofish modAutofish;
+    private ForgeModXPlusAutofish modAutofish;
     private FishMonitorMP fishMonitorMP;
 
     private boolean hookExists = false;
@@ -41,7 +41,7 @@ public class XPlusAutofish {
 
     public long timeMillis = 0L;
 
-    public XPlusAutofish(NeoForgedModXPlusAutofish modAutofish) {
+    public XPlusAutofish(ForgeModXPlusAutofish modAutofish) {
         this.modAutofish = modAutofish;
         this.client = Minecraft.getInstance();
         setDetection();

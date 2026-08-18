@@ -1,6 +1,6 @@
 package com.wudji.xplusautofish.mixin;
 
-import com.wudji.xplusautofish.NeoForgedModXPlusAutofish;
+import com.wudji.xplusautofish.ForgeModXPlusAutofish;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -24,16 +24,16 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonPacketLi
 
     @Inject(method = "handleSoundEvent", at = @At("HEAD"))
     public void onPlaySound(ClientboundSoundPacket playSoundS2CPacket_1, CallbackInfo ci) {
-        if (minecraft.isSameThread()) NeoForgedModXPlusAutofish.getInstance().handlePacket(playSoundS2CPacket_1);
+        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handlePacket(playSoundS2CPacket_1);
     }
 
     @Inject(method = "handleSetEntityMotion", at = @At("HEAD"))
     public void onVelocityUpdate(ClientboundSetEntityMotionPacket entityVelocityUpdateS2CPacket_1, CallbackInfo ci) {
-        if (minecraft.isSameThread()) NeoForgedModXPlusAutofish.getInstance().handlePacket(entityVelocityUpdateS2CPacket_1);
+        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handlePacket(entityVelocityUpdateS2CPacket_1);
     }
 
     @Inject(method = "handleSystemChat", at = @At("HEAD"))
     public void onSysChatMessage(ClientboundSystemChatPacket p_233708_, CallbackInfo ci) {
-        if (minecraft.isSameThread()) NeoForgedModXPlusAutofish.getInstance().handleChat(p_233708_);
+        if (minecraft.isSameThread()) ForgeModXPlusAutofish.getInstance().handleChat(p_233708_);
     }
 }

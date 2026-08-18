@@ -16,16 +16,6 @@ base { archivesName = 'xplus-autofish' }
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-// Temporary bootstrap exclusions; remove as Forge gameplay entry points are ported.
-sourceSets.main.java {
-    exclude '**/NeoForgedModXPlusAutofish.java'
-    exclude '**/XPlusAutofish.java'
-    exclude '**/gui/**'
-    exclude '**/mixin/**'
-    exclude '**/mointor/**'
-    exclude '**/scheduler/**'
-}
-
 minecraft {
     mappings channel: 'official', version: '1.21.10'
 
