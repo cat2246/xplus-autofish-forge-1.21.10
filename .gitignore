@@ -3,8 +3,7 @@ work/
 .superpowers/
 **/.gradle/
 **/build/
-**/run/
-**/run-*/
+**/run*/
 **/.idea/
 **/*.iml
 **/logs/
