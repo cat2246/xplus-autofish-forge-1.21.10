@@ -5,6 +5,7 @@ import com.wudji.xplusautofish.mointor.FishMonitorMP;
 import com.wudji.xplusautofish.mointor.FishMonitorMPMotion;
 import com.wudji.xplusautofish.mointor.FishMonitorMPSound;
 import com.wudji.xplusautofish.scheduler.ActionType;
+import com.wudji.xplusautofish.scheduler.RandomDelay;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.Objects;
+import java.util.function.DoubleSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,11 +40,17 @@ public class XPlusAutofish {
     private long hookRemovedAt = 0L;
     private boolean alreadyAlertOP = false;
     private boolean alreadyPassOP = false;
+    private final DoubleSupplier random;
 
     public long timeMillis = 0L;
 
     public XPlusAutofish(ForgeModXPlusAutofish modAutofish) {
+        this(modAutofish, Math::random);
+    }
+
+    public XPlusAutofish(ForgeModXPlusAutofish modAutofish, DoubleSupplier random) {
         this.modAutofish = modAutofish;
+        this.random = Objects.requireNonNull(random, "random");
         this.client = Minecraft.getInstance();
         setDetection();
 
@@ -323,9 +331,10 @@ public class XPlusAutofish {
     }
 
     private long getRandomDelay(){
-        return Math.random() >=0.5 ?
-                (long) (modAutofish.getConfig().getRecastDelay() * (1 - (Math.random() * modAutofish.getConfig().getRandomDelay() * 0.01))) :
-                (long) (modAutofish.getConfig().getRecastDelay() * (1 + (Math.random() * modAutofish.getConfig().getRandomDelay() * 0.01)));
+        return RandomDelay.compute(
+                modAutofish.getConfig().getRecastDelay(),
+                modAutofish.getConfig().getRandomDelay(),
+                random);
 
     }
 

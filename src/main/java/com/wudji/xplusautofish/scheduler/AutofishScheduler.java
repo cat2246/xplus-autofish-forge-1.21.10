@@ -3,10 +3,13 @@ package com.wudji.xplusautofish.scheduler;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.wudji.xplusautofish.ForgeModXPlusAutofish;
 import com.wudji.xplusautofish.config.ConfigManager;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.LongSupplier;
 
 public class AutofishScheduler {
     private ForgeModXPlusAutofish modAutofish;
@@ -23,9 +26,15 @@ public class AutofishScheduler {
     private float originalPitch = 0.0f;
     private boolean isTurning = false;
     private boolean turnLeft = true;
+    private final LongSupplier nowMillis;
 
     public AutofishScheduler(ForgeModXPlusAutofish modAutofish) {
+        this(modAutofish, Util::getMillis);
+    }
+
+    public AutofishScheduler(ForgeModXPlusAutofish modAutofish, LongSupplier nowMillis) {
         this.modAutofish = modAutofish;
+        this.nowMillis = Objects.requireNonNull(nowMillis, "nowMillis");
     }
 
     public void tick(Minecraft client) {
@@ -111,7 +120,7 @@ public class AutofishScheduler {
         }
     }
     public void scheduleAction(ActionType actionType, long delay, Runnable runnable) {
-        queuedActions.add(new Action(actionType, delay, runnable));
+        queuedActions.add(new Action(actionType, delay, runnable, nowMillis));
     }
 
     public void scheduleAction(Action action) {
@@ -119,7 +128,7 @@ public class AutofishScheduler {
     }
 
     public void scheduleRepeatingAction(long interval, Runnable runnable) {
-        repeatingActions.add(new Action(ActionType.REPEATING_ACTION, interval, runnable));
+        repeatingActions.add(new Action(ActionType.REPEATING_ACTION, interval, runnable, nowMillis));
     }
 
     public boolean isRecastQueued() {
