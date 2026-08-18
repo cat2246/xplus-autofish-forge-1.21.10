@@ -88,5 +88,9 @@
   "options.autofish.reel_in_delay.title": "Reel in delay",
   "options.autofish.reel_in_delay.value": "%d milliseconds",
   "options.autofish.reel_in_delay.tooltip_0": "Add a delay for the reel-in when a fish bites the float.",
-  "options.autofish.reel_in_delay.tooltip_1": "Set this option to 1 to disable this function."
+  "options.autofish.reel_in_delay.tooltip_1": "Set this option to 1 to disable this function.",
+
+  "options.autofish.done": "Done",
+  "options.autofish.cancel": "Cancel",
+  "options.autofish.reset": "Reset"
 }

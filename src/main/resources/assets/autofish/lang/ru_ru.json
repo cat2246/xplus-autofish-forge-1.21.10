@@ -73,5 +73,8 @@
   "options.autofish.advanced.title": "Расширенные настройки",
 
   "info.autofish.open_water_detection.fail": "§c[Autofish] Вы находитесь не на открытой воде!§0",
-  "info.autofish.open_water_detection.success": "§2[Autofish] Вы ловите рыбу на открытой воде!§0"
+  "info.autofish.open_water_detection.success": "§2[Autofish] Вы ловите рыбу на открытой воде!§0",
+  "options.autofish.done": "Готово",
+  "options.autofish.cancel": "Отмена",
+  "options.autofish.reset": "Сбросить"
 }

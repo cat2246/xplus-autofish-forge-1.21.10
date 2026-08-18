@@ -86,6 +86,9 @@
   "options.autofish.reel_in_delay.title": "收杆延迟",
   "options.autofish.reel_in_delay.value": "%d 毫秒",
   "options.autofish.reel_in_delay.tooltip_0": "当鱼咬钩时，延迟一段时间收杆.",
-  "options.autofish.reel_in_delay.tooltip_1": "将此项设置为1以禁用此功能."
+  "options.autofish.reel_in_delay.tooltip_1": "将此项设置为1以禁用此功能.",
+  "options.autofish.done": "完成",
+  "options.autofish.cancel": "取消",
+  "options.autofish.reset": "重置"
 
 }

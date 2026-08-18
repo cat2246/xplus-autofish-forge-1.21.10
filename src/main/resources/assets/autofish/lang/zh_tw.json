@@ -74,5 +74,8 @@
   "options.autofish.advanced.title": "進階選項",
 
   "info.autofish.open_water_detection.fail": "§c[自動釣魚] 你釣魚的區域不是開放水域！§0",
-  "info.autofish.open_water_detection.success": "§2[自動釣魚] 你正在開放水域釣魚！§0"
+  "info.autofish.open_water_detection.success": "§2[自動釣魚] 你正在開放水域釣魚！§0",
+  "options.autofish.done": "完成",
+  "options.autofish.cancel": "取消",
+  "options.autofish.reset": "重設"
 }
