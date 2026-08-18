@@ -9,3 +9,14 @@ work/
 **/*.iml
 **/logs/
 **/crash-reports/
+
+# eclipse
+bin/
+*.launch
+.settings/
+.metadata
+.classpath
+.project
+
+# other
+eclipse/

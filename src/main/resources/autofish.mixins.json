@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.wudji.xplusautofish.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "xplusautofish.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "MixinClientPlayNetworkHandler",
+    "MixinFishHookEntity"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
