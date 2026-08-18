@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPacketListener.class)
+@Mixin(targets = "net.minecraft.client.multiplayer.ClientPacketListener", remap = false)
 public abstract class MixinClientPlayNetworkHandler extends ClientCommonPacketListenerImpl implements TickablePacketListener, ClientGamePacketListener {
     protected MixinClientPlayNetworkHandler(Minecraft minecraft, Connection connection, CommonListenerCookie connectionState) {
         super(minecraft, connection, connectionState);
     }
 
-    @Inject(method = "handleSoundEvent", at = @At("HEAD"))
+    @Inject(method = "handleSoundEvent", at = @At("HEAD"), remap = false)
     public void onPlaySound(ClientboundSoundPacket playSoundS2CPacket_1, CallbackInfo ci) {
         ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
         if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {
@@ -31,7 +31,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonPacketLi
         mod.handlePacket(playSoundS2CPacket_1);
     }
 
-    @Inject(method = "handleSetEntityMotion", at = @At("HEAD"))
+    @Inject(method = "handleSetEntityMotion", at = @At("HEAD"), remap = false)
     public void onVelocityUpdate(ClientboundSetEntityMotionPacket entityVelocityUpdateS2CPacket_1, CallbackInfo ci) {
         ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
         if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {
@@ -40,7 +40,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonPacketLi
         mod.handlePacket(entityVelocityUpdateS2CPacket_1);
     }
 
-    @Inject(method = "handleSystemChat", at = @At("HEAD"))
+    @Inject(method = "handleSystemChat", at = @At("HEAD"), remap = false)
     public void onSysChatMessage(ClientboundSystemChatPacket p_233708_, CallbackInfo ci) {
         ForgeModXPlusAutofish mod = ForgeModXPlusAutofish.getInstance();
         if (mod == null || mod.getAutofish() == null || !minecraft.isSameThread()) {

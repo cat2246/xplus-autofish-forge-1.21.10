@@ -4,62 +4,46 @@ Verification date: 2026-08-18 (Asia/Kuala_Lumpur)
 
 ## Target and provenance
 
-- Minecraft: 1.21.10
-- Forge: 60.1.9
-- Java: Microsoft OpenJDK 21.0.7 (the Minecraft `java-runtime-delta` runtime)
-- OptiFine artifact inspected: `OptiFine-1.21.10_HD_U_J7_pre11.jar`
-- OptiFine SHA-256: `BF845CFC6A387B0CC879512CAEFA86039FD5CA9E37AA6828A1967577AE96B6D7`
-- Upstream: Wudji/XPlus-AutoFish commit `88fd0fc9858b57c8c9e6b26dbb6d47d3dfc0705a`
-- Port version: `1.3.7-forge-mc1.21.10`
+- Minecraft 1.21.10
+- Forge 60.1.9
+- Java Microsoft OpenJDK 21.0.7 (`java-runtime-delta`)
+- OptiFine `OptiFine-1.21.10_HD_U_J7_pre11.jar`, SHA-256 `BF845CFC6A387B0CC879512CAEFA86039FD5CA9E37AA6828A1967577AE96B6D7`
+- Upstream commit `88fd0fc9858b57c8c9e6b26dbb6d47d3dfc0705a`
+- Port version `1.3.7-forge-mc1.21.10`
 
-The live profile was inspected read-only. The exact ForgeOptiFine profile JSON, `TLauncherAdditional.json`, ForgeOptiFine client JAR, and OptiFine JAR were copied to the ignored `work/isolated-optifine/` directory. No game was launched with the live profile as its game directory.
+The live ForgeOptiFine profile, launcher JSON, Forge libraries, and exact OptiFine artifact were inspected read-only. The production-style copy is under ignored `work/production-launch/`; its game directory is `work/production-launch/production-game`. No process used `C:\Users\limwi\AppData\Roaming\.minecraft` as its game directory, and no live-profile files were written.
 
-## Forge development client (without OptiFine)
+## Forge-only smoke
 
-Command:
+Command: `./gradlew runClient` with Java 21. The client reached resource/title-screen initialization in the isolated worktree `run/`; it was then stopped by its isolated process. No world or fishing interaction was exercised.
 
-```text
-./gradlew runClient --args=--quickPlaySingleplayer AutoFishVerification
-```
+Immutable evidence captured before later launches:
 
-The client used the isolated worktree `run/` directory and Java 21. The quick-play world did not exist, so the client reached initialization and stopped; no fishing behavior was exercised. A second `./gradlew runClient` launch produced a Minecraft window titled `Minecraft* Forge 1.21.10`; it was terminated by PID after the title-screen initialization log appeared.
+- `work/evidence/forge-clean-fix-round1-latest.log`
+- `work/evidence/forge-clean-fix-round1-debug.log`
 
-Evidence in `run/logs/debug.log` and `run/logs/latest.log`:
+The debug log proves Forge 60.1.9/Minecraft 1.21.10 startup, discovery of `autofish`, Mixin platform registration, and construction of `com.wudji.xplusautofish.ForgeModXPlusAutofish`. It contains no Mixin-target, missing-class, or event-bus validation failure. The only startup error is the expected unauthenticated Realms feature-flag request caused by dummy/offline smoke credentials. Direct `RegisterKeyMappingsEvent.BUS.addListener(...)` registration is present in the implementation. `V` interaction, settings controls, persistence, and all in-world fishing behavior remain unverified.
 
-- Forge 60.1.9 and Minecraft 1.21.10 initialized.
-- `autofish` was discovered from the development source set.
-- `ForgeModXPlusAutofish` was constructed.
-- The Mixin platform registered the `autofish` container and both client mixin classes are present in the packaged metadata. No Mixin, missing-class, or event-bus validation failure was reported.
-- The implementation source contains the required direct `RegisterKeyMappingsEvent.BUS.addListener(...)` registration.
-- The only unrelated startup error was the unauthenticated development Realms feature-flag request; it did not prevent client initialization.
+## OptiFine production-profile route
 
-## Feature-surface status
+The exact user artifact and profile setup were copied read-only into the isolated production configuration. The direct Java command used `net.minecraftforge.bootstrap.ForgeBootstrap`, the copied Forge/OptiFine libraries, isolated `--gameDir`, live assets read-only, and dummy offline identity arguments; no access token was used or recorded.
 
-Automated tests cover configuration defaults/constraints and persistence, draft save/cancel/reset semantics, key-press latching, scheduler timing, random delays, and translation-key parity. Source/package inspection covers all fourteen configuration fields, Forge event wiring, Mixin metadata, and required JAR entries.
+The earlier reobfuscated packaged-JAR attempt retained these failures:
 
-The following require an in-world or interactive session and were **not exercised** in this smoke run: opening the screen with `V`, widget interaction for all fourteen settings, Reset/Cancel/Done interaction, persistence after a client restart, casting, bite reel-in, recast, sound/motion switching, persistent mode, break protection, multi-rod, auto-turn/reset-view, and ClearLag regex handling. Consequently, this document makes no claim that fishing behavior passed.
+- `work/production-launch/evidence/fix-round1-production.stdout.log`
+- `work/production-launch/evidence/fix-round1-production.stderr.log`
 
-## OptiFine relaunch
+Those logs show OptiFine loading and the actual Mixin failures `@Mixin target gzo was not found` and `@Mixin target dae was not found`. The previous report's attribution to `optifine.Patcher` as the cause of those Mixin failures was incorrect. The production-profile jar set exposes official `net.minecraft...` classes, so the fix changes the mixins to official-name targets and packages official-name classes with an empty runtime refmap rather than the absent obfuscated `gzo`/`dae` names.
 
-The exact OptiFine JAR was copied into the isolated worktree `run/mods/` alongside the packaged Forge JAR and launched through the Forge 60.1.9 development client. OptiFine's transformation service was detected and loaded:
+The corrected official-name artifact was then tested in the same isolated configuration. The Mixin target warnings disappeared, but this manually reconstructed launcher route still failed before a usable title screen with OptiFine transformer `Base resource not found: ...class` messages and `IllegalStateException: Field fluid is not private and an instance field`:
 
-```text
-OptiFineTransformationService.onLoad
-OptiFine ZIP file: .../run/mods/OptiFine-1.21.10_HD_U_J7_pre11.jar
-```
+- `work/production-launch/evidence/fix-round1-official-packaging.stdout.log`
+- `work/production-launch/evidence/fix-round1-official-packaging.stderr.log`
 
-The launch was blocked before a usable title screen. The isolated log records repeated `java.io.IOException: Base resource not found: *.class` failures from `optifine.Patcher`, followed by `Failed to complete lifecycle event CONSTRUCT` and a broken Forge mod state. This is an exact compatibility limitation of this dev-launch reproduction; no OptiFine interaction or fishing check was performed, and no claim of OptiFine compatibility is made.
+This latter failure is retained as a limitation of the direct classpath reconstruction; it is not evidence that AutoFish fishing behavior works with OptiFine. No OptiFine interaction, configuration-screen, casting, or fishing check was exercised. The live profile baseline without AutoFish did reach OptiFine initialization, but that baseline does not establish mod compatibility.
 
-Logs: `run/logs/latest.log` and `run/logs/debug.log` (the latter includes the transformation-service stack trace). The isolated OptiFine copy and profile evidence remain under ignored `work/isolated-optifine/`.
+## Build and deliverables
 
-## Build and artifact verification
+Final Java 21 command: `./gradlew clean test build verifyJarMetadata` — `BUILD SUCCESSFUL`. Tests cover configuration, persistence, screen-model behavior, key latching, scheduling, delays, translations, event wiring, and package metadata. The verified JAR contains Forge metadata, the Mixin configuration/refmap/classes, GPL `LICENSE`, and the icon, with no NeoForge or Cloth Config metadata.
 
-Build/test command:
-
-```text
-./gradlew clean test build verifyJarMetadata
-```
-
-This completed successfully with Java 21. `verifyJarMetadata` confirmed Forge `mods.toml`, the Mixin configuration/refmap, both Mixin classes, GPL `LICENSE`, and the icon, and rejected NeoForge/Cloth Config metadata. The verified JAR was copied to `outputs/xplus-autofish-1.3.7-forge-mc1.21.10.jar`; the build and output copies have matching SHA-256 `5A9C740B9D95A23594CA2FCE39493C3D883E3B8876E5EC98D02E41EDCBA888DD`.
-
-The source archive is generated from the committed source tree and excludes Gradle caches, build/run directories, logs, crash reports, IDE files, and generated SDD workspace artifacts.
+The output JAR and source ZIP hashes are recorded in the Task 9 report. The source ZIP is generated from the committed source tree and excludes Gradle caches, build/run directories, logs, crash reports, IDE files, `work`, and generated SDD artifacts.
