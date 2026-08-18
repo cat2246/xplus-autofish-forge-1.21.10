@@ -61,6 +61,19 @@ class ConfigManagerTest {
     }
 
     @Test
+    void sanitizesInvalidLegacyRegexAndRewritesPersistedJson() throws Exception {
+        Files.writeString(tempDir.resolve(FILE_NAME),
+                "{\"clearLagRegex\":\"[\"}", StandardCharsets.UTF_8);
+
+        ConfigManager manager = new ConfigManager(tempDir);
+
+        assertEquals("", manager.getConfig().getClearLagRegex());
+        assertEquals("", JsonParser.parseString(
+                Files.readString(tempDir.resolve(FILE_NAME), StandardCharsets.UTF_8))
+                .getAsJsonObject().get("clearLagRegex").getAsString());
+    }
+
+    @Test
     void partialJsonPreservesOmittedUpstreamDefaults() throws Exception {
         Files.writeString(tempDir.resolve(FILE_NAME), "{\"recastDelay\":2222}", StandardCharsets.UTF_8);
 
