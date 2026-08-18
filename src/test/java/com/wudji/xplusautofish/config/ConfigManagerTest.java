@@ -61,6 +61,22 @@ class ConfigManagerTest {
     }
 
     @Test
+    void partialJsonPreservesOmittedUpstreamDefaults() throws Exception {
+        Files.writeString(tempDir.resolve(FILE_NAME), "{\"recastDelay\":2222}", StandardCharsets.UTF_8);
+
+        Config config = new ConfigManager(tempDir).getConfig();
+
+        assertEquals(2222L, config.getRecastDelay());
+        assertTrue(config.isAutofishEnabled());
+        assertTrue(config.isOpenWaterDetectEnabled());
+        assertEquals(50L, config.getRandomPercent());
+        assertEquals(1L, config.getReelInDelay());
+        assertEquals(30.0f, config.getTurnAngle());
+        assertEquals(500, config.getTurnDuration());
+        assertEquals("\\[ClearLag\\] Removed [0-9]+ Entities!", config.getClearLagRegex());
+    }
+
+    @Test
     void malformedJsonFallsBackToDefaultsAndRewritesFile() throws Exception {
         Files.writeString(tempDir.resolve(FILE_NAME), "{not-json", StandardCharsets.UTF_8);
 

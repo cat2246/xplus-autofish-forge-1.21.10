@@ -2,6 +2,7 @@ package com.wudji.xplusautofish.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class ConfigManager {
     private final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Config.class, (InstanceCreator<Config>) type -> new Config())
             .create();
     private final Path configDirectory;
     private final Path configFile;
