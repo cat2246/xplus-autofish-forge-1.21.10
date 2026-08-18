@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import java.util.function.LongSupplier;
 public final class AutoFishConfigScreen extends Screen {
     private static final int CONTROL_WIDTH = 150;
     private static final int CONTROL_HEIGHT = 20;
+    static final int ACTION_BUTTON_WIDTH = 90;
+    private static final int ACTION_BUTTON_GAP = 10;
 
     private final ForgeModXPlusAutofish modAutofish;
     private final Screen parentScreen;
@@ -89,14 +92,22 @@ public final class AutoFishConfigScreen extends Screen {
         addEditBox("clear_regex", "options.autofish.clear_regex.title", 3,
                 draft.values().getClearLagRegex(), draft.values()::setClearLagRegex, false);
 
-        int buttonWidth = 90;
+        int buttonWidth = ACTION_BUTTON_WIDTH;
         int buttonY = height - 28;
+        int[] buttonX = actionButtonX(width);
         addRenderableWidget(Button.builder(Component.translatable("options.autofish.done"), button -> done())
-                .bounds(width / 2 - buttonWidth - 5, buttonY, buttonWidth, 20).build());
+                .bounds(buttonX[0], buttonY, buttonWidth, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("options.autofish.cancel"), button -> cancel())
-                .bounds(width / 2 - buttonWidth / 2, buttonY, buttonWidth, 20).build());
+                .bounds(buttonX[1], buttonY, buttonWidth, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("options.autofish.reset"), button -> reset())
-                .bounds(width / 2 + 5 + buttonWidth / 2, buttonY, buttonWidth, 20).build());
+                .bounds(buttonX[2], buttonY, buttonWidth, 20).build());
+    }
+
+    static int[] actionButtonX(int screenWidth) {
+        int groupWidth = ACTION_BUTTON_WIDTH * 3 + ACTION_BUTTON_GAP * 2;
+        int left = (screenWidth - groupWidth) / 2;
+        return new int[]{left, left + ACTION_BUTTON_WIDTH + ACTION_BUTTON_GAP,
+                left + (ACTION_BUTTON_WIDTH + ACTION_BUTTON_GAP) * 2};
     }
 
     private void addBoolean(String field, String titleKey, int tooltipCount, BooleanSupplier getter,
@@ -237,7 +248,9 @@ public final class AutoFishConfigScreen extends Screen {
 
         @Override
         protected void updateMessage() {
-            setMessage(Component.translatable(titleKey.replace(".title", ".value"), actual()));
+            setMessage(CommonComponents.optionNameValue(
+                    Component.translatable(titleKey),
+                    Component.translatable(titleKey.replace(".title", ".value"), actual())));
         }
 
         @Override

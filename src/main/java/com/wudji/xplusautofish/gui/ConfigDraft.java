@@ -17,7 +17,7 @@ public final class ConfigDraft {
     }
 
     public void reset() {
-        editableValues = new Config();
+        editableValues.copyFrom(new Config());
     }
 
     public void applyTo(Config target) {

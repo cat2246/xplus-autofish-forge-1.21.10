@@ -27,11 +27,25 @@ class ConfigDraftTest {
         Config live = new Config();
         live.setRecastDelay(4000);
         ConfigDraft draft = new ConfigDraft(live);
+        Config valuesBeforeReset = draft.values();
 
         draft.reset();
 
+        assertSame(valuesBeforeReset, draft.values());
         assertEquals(1500L, draft.values().getRecastDelay());
         assertFalse(draft.differsFrom(new Config()));
+    }
+
+    @Test
+    void editAfterResetIsAppliedThroughTheStableDraftBinding() {
+        Config live = new Config();
+        ConfigDraft draft = new ConfigDraft(live);
+
+        draft.reset();
+        draft.values().setRecastDelay(4200);
+        draft.applyTo(live);
+
+        assertEquals(4200L, live.getRecastDelay());
     }
 
     @Test
