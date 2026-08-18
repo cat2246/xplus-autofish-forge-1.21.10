@@ -1,0 +1,11 @@
+.worktrees/
+work/
+.superpowers/
+**/.gradle/
+**/build/
+**/run/
+**/run-*/
+**/.idea/
+**/*.iml
+**/logs/
+**/crash-reports/
