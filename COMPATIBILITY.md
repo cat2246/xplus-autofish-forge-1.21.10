@@ -9,7 +9,9 @@ Verification date: 2026-08-18 (Asia/Kuala_Lumpur)
 - Java Microsoft OpenJDK 21.0.7 (`java-runtime-delta`)
 - OptiFine `OptiFine-1.21.10_HD_U_J7_pre11.jar`, SHA-256 `BF845CFC6A387B0CC879512CAEFA86039FD5CA9E37AA6828A1967577AE96B6D7`
 - Upstream commit `88fd0fc9858b57c8c9e6b26dbb6d47d3dfc0705a`
-- Port version `1.3.7-forge-mc1.21.10`
+- Port version `1.3.8-forge-mc1.21.10`
+
+Version 1.3.8 fixes the V-menu double-blur crash when opening AutoFish settings.
 
 The live ForgeOptiFine profile, launcher JSON, Forge libraries, and exact OptiFine artifact were inspected read-only. The production-style copy is under ignored `work/production-launch/`; its game directory is `work/production-launch/production-game`. No process used `C:\Users\limwi\AppData\Roaming\.minecraft` as its game directory, and no live-profile files were written.
 

@@ -183,7 +183,6 @@ public final class AutoFishConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        renderBackground(graphics, mouseX, mouseY, delta);
         graphics.drawCenteredString(font, title, width / 2, 12, 0xFFFFFFFF);
         super.render(graphics, mouseX, mouseY, delta);
     }
