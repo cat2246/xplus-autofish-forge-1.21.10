@@ -128,13 +128,56 @@ public class Config {
         isOpenWaterDetectEnabled = openWaterDetectEnabled;
     }
 
+    public Config copy() {
+        Config copy = new Config();
+        copy.copyFrom(this);
+        return copy;
+    }
+
+    public void copyFrom(Config config) {
+        isAutofishEnabled = config.isAutofishEnabled;
+        multiRod = config.multiRod;
+        isOpenWaterDetectEnabled = config.isOpenWaterDetectEnabled;
+        noBreak = config.noBreak;
+        persistentMode = config.persistentMode;
+        useSoundDetection = config.useSoundDetection;
+        forceMPDetection = config.forceMPDetection;
+        autoTurnView = config.autoTurnView;
+        turnAngle = config.turnAngle;
+        turnDuration = config.turnDuration;
+        recastDelay = config.recastDelay;
+        randomPercent = config.randomPercent;
+        reelInDelay = config.reelInDelay;
+        clearLagRegex = config.clearLagRegex;
+    }
+
     /**
      * @return true if anything was changed
      */
     public boolean enforceConstraints() {
         boolean changed = false;
-        if (recastDelay < 500) {
-            recastDelay = 500;
+        long constrainedRecastDelay = clamp(recastDelay, 500, 5000);
+        if (recastDelay != constrainedRecastDelay) {
+            recastDelay = constrainedRecastDelay;
+            changed = true;
+        }
+        long constrainedRandomPercent = clamp(randomPercent, 0, 75);
+        if (randomPercent != constrainedRandomPercent) {
+            randomPercent = constrainedRandomPercent;
+            changed = true;
+        }
+        long constrainedReelInDelay = clamp(reelInDelay, 1, 2000);
+        if (reelInDelay != constrainedReelInDelay) {
+            reelInDelay = constrainedReelInDelay;
+            changed = true;
+        }
+        int constrainedTurnDuration = clamp(turnDuration, 100, 5000);
+        if (turnDuration != constrainedTurnDuration) {
+            turnDuration = constrainedTurnDuration;
+            changed = true;
+        }
+        if (!Float.isFinite(turnAngle)) {
+            turnAngle = 30.0f;
             changed = true;
         }
         if (clearLagRegex == null) {
@@ -142,5 +185,13 @@ public class Config {
             changed = true;
         }
         return changed;
+    }
+
+    private static long clamp(long value, long minimum, long maximum) {
+        return Math.max(minimum, Math.min(maximum, value));
+    }
+
+    private static int clamp(int value, int minimum, int maximum) {
+        return Math.max(minimum, Math.min(maximum, value));
     }
 }
