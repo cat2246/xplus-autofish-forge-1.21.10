@@ -192,7 +192,7 @@ public final class AutoFishConfigScreen extends Screen {
         private boolean advancedUsed;
 
         private ConfigList(Minecraft minecraft, int width, int top, int bottom) {
-            super(minecraft, width - 24, top, bottom, 32);
+            super(minecraft, width - 24, bottom - top, top, 32);
             setX(12);
         }
 

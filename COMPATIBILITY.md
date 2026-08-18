@@ -9,9 +9,9 @@ Verification date: 2026-08-18 (Asia/Kuala_Lumpur)
 - Java Microsoft OpenJDK 21.0.7 (`java-runtime-delta`)
 - OptiFine `OptiFine-1.21.10_HD_U_J7_pre11.jar`, SHA-256 `BF845CFC6A387B0CC879512CAEFA86039FD5CA9E37AA6828A1967577AE96B6D7`
 - Upstream commit `88fd0fc9858b57c8c9e6b26dbb6d47d3dfc0705a`
-- Port version `1.3.8-forge-mc1.21.10`
+- Port version `1.3.9-forge-mc1.21.10`
 
-Version 1.3.8 fixes the V-menu double-blur crash when opening AutoFish settings.
+Version 1.3.8 fixes the V-menu double-blur crash when opening AutoFish settings. Version 1.3.9 fixes the configuration list geometry so its height and top position are passed correctly to Minecraft's selection-list widget; this keeps the settings rows between the title and action buttons. No 1.3.9 actual-launcher or interactive V-menu smoke test has been run.
 
 The live ForgeOptiFine profile, launcher JSON, Forge libraries, and exact OptiFine artifact were inspected read-only. The production-style copy is under ignored `work/production-launch/`; its game directory is `work/production-launch/production-game`. No process used `C:\Users\limwi\AppData\Roaming\.minecraft` as its game directory, and no live-profile files were written.
 
@@ -46,7 +46,7 @@ This latter failure is retained as a limitation of the direct classpath reconstr
 
 ## Historical 1.3.7 actual launcher/profile evidence
 
-The following actual-launcher/title-screen evidence is retained from the 1.3.7 artifact and does not verify 1.3.8. No 1.3.8 actual-launcher, V/config-screen, or in-world interaction smoke has been run; 1.3.8 is currently covered by the automated build, regression, and JAR metadata checks in the section below.
+The following actual-launcher/title-screen evidence is retained from the 1.3.7 artifact and does not verify 1.3.9. No 1.3.9 actual-launcher, V/config-screen, or in-world interaction smoke has been run; 1.3.9 is currently covered by the automated build, regression, and JAR metadata checks in the section below.
 
 The copied TLauncher executable was inspected and run with `USERPROFILE`, `APPDATA`, `LOCALAPPDATA`, and `HOME` redirected to ignored `work/production-launch/actual-launcher-root`; the live `.minecraft` and launcher settings were not written. The copied launcher selected the copied local `ForgeOptiFine 1.21.10` profile and was started with offline username `Dev`. Its child command line used the copied Forge 60.1.9 libraries, the copied profile jar, isolated game directory, and the packaged AutoFish jar in the isolated `mods` directory. No live access token was used or recorded.
 
@@ -55,7 +55,7 @@ Immutable evidence:
 - `work/production-launch/evidence/fix-round2-actual-launcher-optifine-latest.log` (SHA-256 `B23B7F2D0F3ECC18DBBC424E4C9D0B79A96B6ACD9C96656D2B6FA9FE4891B842`)
 - `work/production-launch/evidence/fix-round2-actual-launcher-tlauncher.log` (SHA-256 `26EE69ADF9F8C2C87EAA5ABFDDA6F7B014A326ED28D536C40E510EF85EB1E331`)
 
-The retained game log proves the historical 1.3.7 route found both `OptiFine-1.21.10_HD_U_J7_pre11.jar` and `xplus-autofish-1.3.7-forge-mc1.21.10.jar`, initialized Forge 60.1.9 for Minecraft 1.21.10, initialized MixinExtras, loaded OptiFine, completed resource loading, and reached the title screen. Visual title-screen evidence showed `Forge 60.1.9 (4 mods loaded)`. There are no `gzo`/`dae` target failures, `NoClassDefFoundError`, Patcher base-resource failure, or lifecycle crash in this historical actual-launcher run. This establishes packaged-JAR startup compatibility for 1.3.7 with the copied Forge+OptiFine profile through title screen; it is not a 1.3.8 verification. No V/config-screen, world, casting, fishing, or interaction behavior was exercised; those remain unverified.
+The retained game log proves the historical 1.3.7 route found both `OptiFine-1.21.10_HD_U_J7_pre11.jar` and `xplus-autofish-1.3.7-forge-mc1.21.10.jar`, initialized Forge 60.1.9 for Minecraft 1.21.10, initialized MixinExtras, loaded OptiFine, completed resource loading, and reached the title screen. Visual title-screen evidence showed `Forge 60.1.9 (4 mods loaded)`. There are no `gzo`/`dae` target failures, `NoClassDefFoundError`, Patcher base-resource failure, or lifecycle crash in this historical actual-launcher run. This establishes packaged-JAR startup compatibility for 1.3.7 with the copied Forge+OptiFine profile through title screen; it is not a 1.3.9 verification. No V/config-screen, world, casting, fishing, or interaction behavior was exercised; those remain unverified.
 
 ## Build and deliverables
 
